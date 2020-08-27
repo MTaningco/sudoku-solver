@@ -1,3 +1,5 @@
+import collections
+
 class Section:
     def __init__(self, cells):
         self.cells = cells
@@ -35,7 +37,27 @@ class Section:
                 print("cell added with the properties {row} {col} {val}".format(row=cellOfInterest.tuple[0], col=cellOfInterest.tuple[1], val=cellOfInterest.val[0]))
                 newSolvedQueue.append(cellOfInterest)
 
-    def findCoupledSolution(self, newSolvedQueue):
+    def findCoupledSolution(self, cell, newSolvedQueue, oldSolvedQueue):
         print("")
         # for every cell, find a n-1 different cell that has the n length and same numbers that is greater than or equal to two
             #once this is found, remove those numbers from the rest of the cells
+        if len(newSolvedQueue) <= 0:
+            for currentCell in self.cells:
+                if len(currentCell.val) > 1:
+                    totalNeeded = len(currentCell.val)
+                    coupledCells = []
+                    coupledCells.append(currentCell)
+                    currentIndex = 0
+                    while currentIndex < len(self.cells) and len(coupledCells) < totalNeeded:
+                        if self.cells[currentIndex] is not currentCell and collections.Counter(currentCell.val) == collections.Counter(self.cells[currentIndex].val):
+                            coupledCells.append(self.cells[currentIndex])
+                        currentIndex += 1
+                    if len(coupledCells) == totalNeeded:
+                        # remove these numbers from all other cells
+                        for complementaryCell in self.cells:
+                            if complementaryCell not in coupledCells:
+                                complementaryCell.val = list(set(complementaryCell.val) - set(coupledCells[0].val))
+
+            for currentCell in self.cells:
+                if currentCell.isSolved() and currentCell is not cell and currentCell not in newSolvedQueue and currentCell not in oldSolvedQueue:
+                    newSolvedQueue.append(currentCell)

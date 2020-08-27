@@ -95,7 +95,13 @@ class Board:
                 currentVerticalSection.findHiddenSolution(currentSolvedCell, self.newSolvedQueue, self.oldSolvedQueue)
             self.oldSolvedQueue.append(currentSolvedCell)
             self.printBoard()
-            if len(self.newSolvedQueue) == 0:
-                print("asdf")
-                # find coupled groups, size 2 for both cells, same 2 numbers, size 3 for 3 cells, same 3 numbers, etc?
+
+            for currentSquareSection in squareSections:
+                currentSquareSection.findCoupledSolution(currentSolvedCell, self.newSolvedQueue, self.oldSolvedQueue)
+            # print("starting on horizontal section hidden phase")
+            for currentHorizontalSection in horizontalLines:
+                currentHorizontalSection.findCoupledSolution(currentSolvedCell, self.newSolvedQueue, self.oldSolvedQueue)
+            # print("starting on vertical section hidden phase")
+            for currentVerticalSection in verticalLines:
+                currentVerticalSection.findCoupledSolution(currentSolvedCell, self.newSolvedQueue, self.oldSolvedQueue)
         print("asdf")
