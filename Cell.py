@@ -1,7 +1,17 @@
+import copy
+
 class Cell:
     def __init__(self, row, col):
         self.tuple = (row, col)
         self.val = [1, 2, 3, 4, 5, 6, 7, 8, 9]
+
+    def __deepcopy__(self, memodict={}):
+        cell = Cell(self.tuple[0], self.tuple[1])
+        cell.val = copy.deepcopy(self.val)
+        return cell
+
+    def copyCell(self):
+        return copy.deepcopy(self)
 
     def setValue(self, val):
         self.val.clear()

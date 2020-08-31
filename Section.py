@@ -1,4 +1,5 @@
 import collections
+import copy
 
 class Section:
     def __init__(self, cells):
@@ -10,6 +11,18 @@ class Section:
     #     # rowCheck = self.sectionRow * 3 <= row and (self.sectionRow + 1) * 3 > row
     #     # colCheck = self.sectionColumn * 3 <= col and (self.sectionColumn + 1) * 3 > col
     #     return cell in self.cells
+    def __deepcopy__(self, memodict={}):
+        return Section(copy.deepcopy(self.cells))
+
+    def findError(self):
+        for cell in self.cells:
+            if len(cell.val) == 0:
+                raise Exception("cell({row}, {col}) contains no possible solution".format(row=cell.tuple[0], col=cell.tuple[1]))
+            elif len(cell.val) == 1:
+                cellVal = cell.val[0]
+                for probeCell in self.cells:
+                    if probeCell is not cell and len(probeCell.val) == 1 and probeCell.val[0] == cellVal:
+                        raise Exception("cell({row1}, {col1}) and cell({row2}, {col2}) contains the same value which is not possible".format(row1=cell.tuple[0], col1=cell.tuple[1], row2=probeCell.tuple[0], col2=probeCell.tuple[1]))
 
     #assumes that contains cell was first used
     def removeValFromSectionExcept(self, cell, newSolvedQueue, oldSolvedQueue):
@@ -38,7 +51,6 @@ class Section:
                 newSolvedQueue.append(cellOfInterest)
 
     def findCoupledSolution(self, cell, newSolvedQueue, oldSolvedQueue):
-        print("")
         # for every cell, find a n-1 different cell that has the n length and same numbers that is greater than or equal to two
             #once this is found, remove those numbers from the rest of the cells
         if len(newSolvedQueue) <= 0:
